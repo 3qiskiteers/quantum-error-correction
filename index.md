@@ -3,7 +3,6 @@ layout: default
 title: Quantum Error Correction
 usemathjax: true
 ---
-$$\newcommand{\bra}[1]{\left<#1\right|}\newcommand{\ket}[1]{\left|#1\right>}\newcommand{\bk}[2]{\left<#1\middle|#2\right>}\newcommand{\bke}[3]{\left<#1\middle|#2\middle|#3\right>$$
 
 # 0. Our Goal
 This project, designed by Julian Quevedo, Michael Robertson,
