@@ -1,3 +1,7 @@
+---
+layout: default
+title: QEC
+---
 This is a code block:
 ```c++
 int main() {
