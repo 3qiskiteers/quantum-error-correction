@@ -2,6 +2,8 @@
 layout: default
 title: QEC
 ---
+THE WEBSITE IS FIXED!
+
 This is a code block:
 ```c++
 int main() {
