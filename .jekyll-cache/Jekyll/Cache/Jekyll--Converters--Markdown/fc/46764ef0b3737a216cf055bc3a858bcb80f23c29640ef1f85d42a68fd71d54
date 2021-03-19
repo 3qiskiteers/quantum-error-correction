@@ -1,4 +1,8 @@
-I"½8<p>This is a code block:</p>
+I"9<p>Here is an equation: \(x^2 = 5\)</p>
+
+<p>THE WEBSITE IS FIXED!</p>
+
+<p>This is a code block:</p>
 <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sup"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>

@@ -1,7 +1,10 @@
 ---
 layout: default
-title: QEC
+title: Quantum Error Correction
+usemathjax: true
 ---
+Here is an equation: $$ x^2 = 5 $$
+
 THE WEBSITE IS FIXED!
 
 This is a code block:
