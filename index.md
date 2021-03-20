@@ -372,7 +372,9 @@ Before briefly discussing some of the other error correction codes out there, we
 
 Like with logic gates in classical computers, quantum gates aren’t infallible. They can introduce errors into our computation, with the “physical error rate” referring to the probability of that happening. However, with the right error correcting code, we’re still able to peform long calculations with good precision. The idea is we can fix the errors faster than they pop up.
 
-Since the development of Shor’s code, numerous error correcting codes have been devised. One example which closely resembled it was Steane’s code, which was able to preserve the state of a single qubit using seven qubits instead of nine up to a single arbitrary error. There was another code which involved a logical qubit composed of five physical qubits, using four ancillary qubits (shown below). This is the smallest code which protects against single qubit errors.
+![](img/steane.png)
+
+Since the development of Shor’s code, numerous error correcting codes have been devised. One example which closely resembled it was Steane’s code (shown above), which was able to preserve the state of a single qubit using seven qubits instead of nine up to a single arbitrary error. There was another code which involved a logical qubit composed of five physical qubits, using four ancillary qubits (shown below). This is the smallest code which protects against single qubit errors.
 
 ![](img/5bit.png)
 
