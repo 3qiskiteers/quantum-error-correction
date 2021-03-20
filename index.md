@@ -270,22 +270,10 @@ Before briefly discussing some of the other error correction codes out there, we
 
 Like with logic gates in classical computers, quantum gates aren’t infallible. They can introduce errors into our computation, with the “physical error rate” referring to the probability of that happening. However, with the right error correcting code, we’re still able to peform long calculations with good precision. The idea is we can fix the errors faster than they pop up.
 
-
-References
-Quantum Error Correction for Beginners
-https://arxiv.org/pdf/0905.2794.pdf
-
-Scheme for reducing decoherence in quantum computer memory
-https://www.cs.miami.edu/home/burt/learning/Csc670.052/pR2493_1.pdf
-
-Quantum Error Correction
-https://oxfordre.com/physics/view/10.1093/acrefore/9780190871994.001.0001/acrefore-9780190871994-e-35
-
-25 Years of quantum error correction
-https://www.nature.com/articles/s42254-020-0244-y.pdf?origin=ppub
-
-Quantum error correction on Wikipedia
-https://en.wikipedia.org/wiki/Quantum_error_correction
-
-Motives behind quantum error correction
-http://decodoku.blogspot.com/2016/02/4-decoding-without-looking.html?m=1
+## References
+![25 Years of quantum error correction](https://www.nature.com/articles/s42254-020-0244-y.pdf?origin=ppub)
+![Motives behind quantum error correction](http://decodoku.blogspot.com/2016/02/4-decoding-without-looking.html?m=1)
+![Quantum Error Correction for Beginners](https://arxiv.org/pdf/0905.2794.pdf)
+![Quantum Error Correction](https://oxfordre.com/physics/view/10.1093/acrefore/9780190871994.001.0001/acrefore-9780190871994-e-35)
+![Quantum error correction on Wikipedia](https://en.wikipedia.org/wiki/Quantum_error_correction)
+![Scheme for reducing decoherence in quantum computer memory](https://www.cs.miami.edu/home/burt/learning/Csc670.052/pR2493_1.pdf)
