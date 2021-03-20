@@ -285,6 +285,12 @@ Before briefly discussing some of the other error correction codes out there, we
 
 Like with logic gates in classical computers, quantum gates aren’t infallible. They can introduce errors into our computation, with the “physical error rate” referring to the probability of that happening. However, with the right error correcting code, we’re still able to peform long calculations with good precision. The idea is we can fix the errors faster than they pop up.
 
+Since the development of Shor’s code, numerous error correcting codes have been devised. One example which closely resembled it was Steane’s code, which was able to preserve the state of a single qubit using seven qubits instead of nine up to a single arbitrary error. There was another code which involved a logical qubit composed of five physical qubits, using four ancillary qubits. This is the smallest code which protects against single qubit errors.
+
+The broader family of error correcting codes which use these ancillary qubits is called stabilizer codes. The ancillary qubits are attached to the qubits we want to protect, allowing us to determine where errors occurred and what kind. We can measure them to find this out, without needing to measure the state we’re trying to protect, therefore preserving its superposition.
+
+A promising candidate currently is surface codes. With these, physical qubits are placed on the edges of a grid pattern to form the larger logical qubit, with stabilizer codes for X or Z gates placed at the grid corners and square centers. When errors occur, the parity in certain groups of four qubits will change, so that measuring the stabilizers shows us where the errors are. Additionally, surface codes include toric codes and planar codes. With toric codes, there’s no problems at the boundaries because it loops back on itself. With planar codes though, it stops at the boundaries, so different stabilizers are used there. Surface codes have a threshold on the order of 1%.
+
 ## References
 1. [25 Years of quantum error correction](https://www.nature.com/articles/s42254-020-0244-y.pdf?origin=ppub)
 2. [Motives behind quantum error correction](http://decodoku.blogspot.com/2016/02/4-decoding-without-looking.html?m=1)
