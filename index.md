@@ -55,7 +55,64 @@ What if all three bits are flipped? This situation turns out to be equivalent to
 
 In conclusion, the 3-bit code can only account for a single bit flip. In general, quantum error codes are unable to correct for all possible errors. So, they are optimized for the most probable errors.
 
-Concretely, how much does using the 3-bit code help us? We know it will only work if 0 or 1 of our 3 qubits are flipped. The probability of none being flipped is (1-p)^3, while the probability of any single qubit being flipped is p(1-p)^2. So, the combined probability of our error code reproducing the correct state is (1-p)^3 + 3p(1-p)^2. If we didn’t use error correction, the probability of $$\ket{\psi}$$ being correctly transmitted is just 1-p, as mentioned before. The probability of perfectly reproducing the original state is a measure of what’s called fidelity. Plotting the fidelity vs p, we see that the 3-bit code will result in higher fidelity as long as the probability of a bit flip is less than 50%. Once the probability becomes higher than 50%, however, the problems associated with 2 or 3 bit-flips dominate.
+Concretely, how much does using the 3-bit code help us? We know it will only work if 0 or 1 of our 3 qubits are flipped. The probability of none being flipped is $$(1-p)^3$$, while the probability of any single qubit being flipped is $$p(1-p)^2$$. So, the combined probability of our error code reproducing the correct state is $$(1-p)^3 + 3p(1-p)^2$$. If we didn’t use error correction, the probability of $$\ket{\psi}$$ being correctly transmitted is just 1-p, as mentioned before. The probability of perfectly reproducing the original state is a measure of what’s called fidelity. Plotting the fidelity vs $$p$$, we see that the 3-bit code will result in higher fidelity as long as the probability of a bit flip is less than 50%. Once the probability becomes higher than 50%, however, the problems associated with 2 or 3 bit-flips dominate.
+
+Implementation
+This all makes sense in theory, but it is equally important to verify the bit-flip code experimentally. There are several popular quantum computing frameworks, but the one we’ll be using is Qiskit for Python. If you don’t have it installed already, use the command `pip install qiskit`.
+
+Start by importing the necessary modules. We’ll be needing several `qiskit` functions such as the `Initialize` custom gate as well as a few functions for visualizing our experimental results.
+
+```python
+	insert code
+```
+
+Next, initialize the quantum circuit in the above diagram. We will need three qubits corresponding to $$q_0$$, $$q_1$$, and $$q_2$$, as well as one classical bit to store our measurement results.
+
+```python
+	insert code
+```
+
+We want to be able to correct errors for any arbitrary state $$\ket{\psi}$$. Define `s_init` to pick a random pair of amplitudes, using them to create a custom “initialization gate” which will be applied to $$q_0$$ at the beginning of the program.
+
+```python
+	insert code
+```
+
+Next is the encoding stage. Simply apply two CNOT gates to the desired quantum circuit `qc`. The first parameters are the indexes of the control bit followed by the target bit, respectively. Since we want to entangle the ancillary bits, both of the controls should be set to the index of $$q_0$$, `0`.
+
+```python
+	insert code
+```
+
+Next, we need to introduce a random error, represented as a rotation about the $$x$$-axis by some arbitrary angle.
+
+```python
+	insert code
+```
+
+Now, decode the qubit by applying two more CNOT gates on the ancillary bits, followed by a Toffoli (CCNOT) whose target bit is $$q_0$$.
+
+```python
+	insert code
+```
+
+Last but not least, measure the state of the original qubit and store the result in index `0` of the classical register.
+
+```python
+	insert code
+```
+
+Putting it all together and visualizing the circuit, we get:
+
+```python
+	insert code
+```
+
+Now to test our circuit, all we have to do is choose a platform to run it on and plot the results.
+
+```python
+	insert code
+```
 
 # 6. The Phase-Flip Code
 As it is a close cousin of the bit-flip code, the circuit for correcting random phase-flips is very similar. The only difference is that there are three extra Hadamard gates at the end of the encoding sequence, and three more at the beginning of the decoding sequence.
