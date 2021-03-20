@@ -254,11 +254,17 @@ By visual inspection, it is easy to see that rotating about these two axes by so
 
 Shor’s 9-bit code does exactly this. A full circuit diagram is pictured below:
 
+![](img/shor-circuit.png)
+
 The circuit diagram looks intimidating. What are all those CNOT gates doing there? It’s hard to wrap our heads around this circuit directly, but things become a little clearer when we consider the seemingly recursive nature of the circuit. Take the middle sections of the circuit:
+
+![](img/shor-inner.png)
 
 These three sections are identical to the circuit configuration for the 3-qubit bit flip code we discussed earlier! Each group of three qubits undergoes the same operation that corrects any bit-flip (or X rotation) that may have resulted from the noisy channel.
 
 Next, look at the outer sections:
+
+![](img/shor-outer.png)
 
 Yet again, we see a familiar face: the 3-qubit phase flip code also appears across every third qubit in the circuit! Each group of three qubits, represented by a single header qubit, collectively runs through this circuit to correct any phase-flip (or $$Z$$ rotation) that may have resulted from the noisy channel.
 
