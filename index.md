@@ -272,7 +272,68 @@ In this way, the Shor code is akin to a quantum Lego set. When we send 9 entangl
 
 Feel free to explore the behind-the-scenes code that makes this run!
 
+```python
+def encoding(qc):
+    qc.cx(0,3)
+    qc.cx(0,6)
+    qc.h(0)
+    qc.h(3)
+    qc.h(6)
+    qc.cx(0,1) 
+    qc.cx(0,2) 
+    qc.cx(3,4) 
+    qc.cx(3,5)
+    qc.cx(6,7) 
+    qc.cx(6,8)
+def decoding(qc):
+    qc.cx(0,1) 
+    qc.cx(0,2) 
+    qc.cx(3,4) 
+    qc.cx(3,5)
+    qc.cx(6,7) 
+    qc.cx(6,8)
+    qc.ccx(2,1,0)
+    qc.ccx(5,4,3)
+    qc.ccx(8,7,6)
+    qc.h(0)
+    qc.h(3)
+    qc.h(6)
+    qc.cx(0,3)
+    qc.cx(0,6)
+    qc.ccx(6,3,0)
+```
+
+The error function is now generalized; it chooses a random qubit and then performs two random rotations on it.
+```python
+def random_error(qc):
+    q = np.random.randint(0,9)
+    qc.rx(np.random.uniform(0,np.pi/2), q)
+    qc.rz(np.random.uniform(0,np.pi/2), q)
+```
+
+Putting everything together (along with the boilerplate code used in the previous three-bit codes) yields
+```python
+shor_circuit.append(s_init(),[0])
+encoding(shor_circuit)
+shor_circuit.barrier(range(9))
+random_error(shor_circuit)
+shor_circuit.barrier(range(9))
+decoding(shor_circuit)
+```
+
 And here is an example of some modular pseudocode that makes the recursive nature of the Shor code clear:
+```python
+def ShorCodePseudoCode(qc):
+  qc.PFCenc(0,3,6)
+  qc.BFCenc(0,1,2)
+  qc.BFCenc(3,4,5)
+  qc.BFCenc(6,7,8)
+  qc.NoisyChannel()
+  qc.BFCdec(0,1,2)
+  qc.BFCdec(3,4,5)
+  qc.BFCdec(6,7,8)
+  qc.PFCdec(0,3,6)
+```
 
 When run in a quantum simulation, our results showed that the resulting output qubit always had the same coefficients as the input qubit. This relationship was upheld through trials across the entire domain of possible unitary errors on a single qubit.
 
