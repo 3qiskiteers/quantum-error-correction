@@ -50,29 +50,29 @@ Now, we can properly dive into the ideas that Peter Shor used to develop the fir
 # 4. Types of Quantum Errors
 Bit-flip codes account for situations where $$\ket{0}$$ gets flipped to $$\ket{1}$$ or $$\ket{1}$$ gets flipped to $$\ket{0}$$. These errors are represented by the X operator.
 
-Sign-flip codes, or phase-flip codes, account for situations when $$\ket{0} + \ket{1}$$ becomes $$\ket{0} - \ket{1}$$. These kinds of errors are represented by the Z operator.
+Phase-flip codes, account for situations when $$\ket{0} + \ket{1}$$ becomes $$\ket{0} - \ket{1}$$. These kinds of errors are represented by the Z operator.
 
-Both of these types of phenomenon are encountered often in nature. In order to have what is known as a complete error correcting code, it must be able to deal with both bit-flips and phase-flips.
+Both of these types of phenomenon are encountered often in nature. In order to have what is known as a complete error correcting code, it must be able to deal with any unitary operator, which may be a combination of bit-flips and phase-flip codes.
 
 # 5. The Bit-Flip Code
 
 ![](img/bit-flip-diagram.png)
 
-The first step of the process is encoding. Here we’re going to take advantage of quantum mechanics and create an entangled state. $$\ket{\psi}$$  is the state we want to keep in tact at the end of the day. Then, we have two CNOT gates applied one after another. This entangles all three qubits.
+The first step of the process is encoding. Here we’re going to take advantage of quantum mechanics and create an entangled state. $$\ket{\psi}$$ is the state we want to keep intact at the end of the day. Then, we have two CNOT gates applied one after another. This entangles all three qubits.
 
 Next is the random environmental error. Since we are doing the bit flip code, we can correct for any rotation around the x axis.
 
-In the decoding stage, this is where we hopefully ensure $$\ket{\psi}$$  has the correct state. The CNOTs are applied once more, followed by a Toffoli. The Toffoli will only activate if  both ancillas are a 1 at the time.
+In the decoding stage, this is where we hopefully ensure $$\ket{\psi}$$  has the correct state. The CNOTs are applied once more, followed by a Toffoli gate (also known as a CCNOT gate). It is hard to fully describe the nature of the Toffoli gate, but a good classical approximation is to say that it will flip the state of the third qubit if and only if both of the other qubits are in the 1 state.
 
-Let’s say each qubit in our circuit has probability p of X being applied to it “by the environment” every timestep. To account for this, we can define one logical qubit using 3 physical qubits. For example, the $$\ket{0}$$  logical state will be expressed as $$\ket{000}$$ and the $$\ket{1}$$ logical state will be expressed as $$\ket{111}$$. A classical algorithm would achieve this by simply making two copies of the original bit, then taking a “majority vote” at the end of processing. However, creating a copy of our desired qubit would necessarily disturb it. So, we instead distribute its information across two ancilla qubits using two sequential CNOT gates. The ancilla qubits are initially in the $$\ket{0}$$ state, so, If our arbitrary state $$\ket{\psi}$$  is in the $$\ket{1}$$ state, they will get flipped to the $$\ket{1}$$ state as well. If $$\ket{\psi}$$  is in the $$\ket{0}$$ state, nothing happens, and all qubits remain in the $$\ket{0}$$ state.
+Let’s say each qubit in our circuit has probability p of X being applied to it “by the environment” every timestep. To account for this, we can define one logical qubit using 3 physical qubits. For example, the $$\ket{0}$$  logical state will be expressed as $$\ket{000}$$ and the $$\ket{1}$$ logical state will be expressed as $$\ket{111}$$. A classical algorithm would achieve this by simply making two copies of the original bit, then taking a “majority vote” at the end of processing. As mentioned earlier, creating copies is impossible with this quantum architecture, so we instead distribute its information across two ancilla qubits using two sequential CNOT gates. Again, the quantum aspect of this operation is hard to describe, but a classical analogy is that the ancilla qubits are initially in the $$\ket{0}$$ state, so, if our arbitrary state $$\ket{\psi}$$  is in the $$\ket{1}$$ state, they will get flipped to the $$\ket{1}$$ state as well. If $$\ket{\psi}$$ is in the $$\ket{0}$$ state, nothing happens, and all qubits remain in the $$\ket{0}$$ state.
 
-Error codes are generally broken into a 3 step process: encoding, simulated error, and decoding. What we have so far is the encoding stage. Next is the error simulation, also called a “noisy channel,” in which any subset of three qubits may have X applied to them at random. Since p is the probability of a bit-flip, Each qubit has a probability of 1-p of being transmitted correctly.
+Error codes are generally broken into a 3 step process: encoding, simulated error, and decoding. What we have so far is the encoding stage. Next is the error simulation, also called a “noisy channel,” in which any subset of three qubits may have X applied to them at random. Since $$p$$ is the probability of a bit-flip, Each qubit has a probability of $$1-p$$ of being transmitted correctly.
 
-The rest of the circuit involves applying another two CNOT gates in a similar fashion, followed by a CCNOT or Toffoli gate on psi. The Toffoli gate will only flip $$\ket{\psi}$$ if both ancilla bits are in the $$\ket{1}$$  state. So, assuming only 1 qubit has been flipped in the noisy channel, let’s see how this circuit works!
+The rest of the circuit involves applying another two CNOT gates in a similar fashion, followed by a CCNOT or Toffoli gate on $$\ket{\psi}$$. The Toffoli gate will only flip $$\ket{\psi}$$ if both ancilla bits are in the $$\ket{1}$$  state. So, assuming only 1 qubit has been flipped in the noisy channel, let’s see how this circuit works!
 
 ![](img/1-error.png)
 
-If the first bit is flipped, then the ancilla bits always become the $$\ket{1}$$  state, and thus the Toffoli takes care of the correction. If either of the ancilla bits are flipped, the Toffoli will not activate, so the state of $$\ket{\psi}$$ is not disturbed.
+If the first bit is flipped, then the ancilla bits always become the $$\ket{1}$$ state, and thus the Toffoli takes care of the correction. If either of the ancilla bits are flipped, the Toffoli will not activate, so the state of $$\ket{\psi}$$ is not disturbed.
 
 ![](img/2-error.png)
 
@@ -82,11 +82,13 @@ What happens if two bits are flipped? In this case, two bit-flips are indistingu
 
 What if all three bits are flipped? This situation turns out to be equivalent to no flips occurring at all. In this case, both ancilla bits will always end up in the $$\ket{0}$$  state, which will fail to activate the Toffoli and leave $$\ket{\psi}$$ in the incorrect state.
 
-In conclusion, the 3-bit code can only account for a single bit flip. In general, quantum error codes are unable to correct for all possible errors. So, they are optimized for the most probable errors.
+In conclusion, the 3-bit code can only account for a single bit flip.
 
-Concretely, how much does using the 3-bit code help us? We know it will only work if 0 or 1 of our 3 qubits are flipped. The probability of none being flipped is $$(1-p)^3$$, while the probability of any single qubit being flipped is $$p(1-p)^2$$. So, the combined probability of our error code reproducing the correct state is $$(1-p)^3 + 3p(1-p)^2$$. If we didn’t use error correction, the probability of $$\ket{\psi}$$ being correctly transmitted is just 1-p, as mentioned before. The probability of perfectly reproducing the original state is a measure of what’s called fidelity. Plotting the fidelity vs $$p$$, we see that the 3-bit code will result in higher fidelity as long as the probability of a bit flip is less than 50%. Once the probability becomes higher than 50%, however, the problems associated with 2 or 3 bit-flips dominate.
+Concretely, how much does using the 3-bit code help us? We know it will only work if 0 or 1 of our 3 qubits are flipped. The probability of none being flipped is $$(1-p)^3$$, while the probability of any single qubit being flipped is $$p(1-p)^2$$. So, the combined probability of our error code reproducing the correct state is $$(1-p)^3 + 3p(1-p)^2$$. If we didn’t use error correction, the probability of $$\ket{\psi}$$ being correctly transmitted is just $$1-p$$, as mentioned before. Plotting the fidelity vs $$p$$, we see that the 3-bit code will result in higher fidelity as long as the probability of a bit flip is less than 50%. Once the probability becomes higher than 50%, however, the problems associated with 2 or 3 bit-flips dominate.
 
 ![](img/fidelity.png)
+
+In reality, the case of greater than 50% error will likely never happen. For a realistic quantum system that has already been thermally and kinetically isolated, such as the Google "chandelier" pictured in the earlier section, the probability of a single qubit being corrupted is several order of magnitude smaller than 50%; therefore, with this error correction scheme, the total error rate should theoretically drop to nearly 0.
 
 ## Implementation
 This all makes sense in theory, but it is equally important to verify the bit-flip code experimentally. There are several popular quantum computing frameworks, but the one we’ll be using is Qiskit for Python. If you don’t have it installed already, use the command `pip install qiskit`.
