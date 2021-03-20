@@ -282,9 +282,17 @@ All of this is just a theory. It’s useless if we don’t try it in practice!
 
 We ran our error correction code on one of IBM's real quantum computing systems hosted in Melbourne (this was the only available service that offered the 9 qubits sufficient for our program).
 
-The code we used is attached below (note that we did not introduce an artificial error in the circuit because we are relying on inherent inaccuracies in the quantum hardware to test our code.) To see how effective the code was, we also ran control trials where we implemented the error correction code on the quantum simulator and compared the histograms.
+The code we used is attached below (note that we did not introduce an artificial error in the circuit because we are relying on inherent inaccuracies in the quantum hardware to test our code). This code (graphical circuit) was created using IBM's quantum circuit composer to aid in the visualization of the circuit. To see how effective the code was, we also ran control trials where we implemented the error correction code on the quantum simulator and compared the histograms.
+
+![](img/shor-circuit-comp.png)
 
 Our results are below. This code was run for the input qubit $$\ket{\psi}=0.689\ket{0}+0.724\ket{1}$$, with the histogram showing the probability distribution of the output qubit across 1024 trials.
+
+![](img/melbourne-histogram.png)
+Above is the histogram of results after running the protocol on the Melbourne system.
+
+![](img/qasm-histogram.png)
+Above is the histogram of results after the control test of the protocol on the QAsm simulator.
 
 The queue times for the Melbourne computer are unfortunately rather long, so we could only enter one trial within the time frame. So far the results seem inconclusive because the histograms match up and are both very similar to simply running the qubit through a series of identity gates (to simulate a noisy channel). We suspect this is because the natural error rate for the qubits in the quantum computer is already low enough that there will be no discernable corruption within such a small circuit.
 
