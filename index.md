@@ -270,7 +270,19 @@ And here is an example of some modular pseudocode that makes the recursive natur
 
 When run in a quantum simulation, our results showed that the resulting output qubit always had the same coefficients as the input qubit. This relationship was upheld through trials across the entire domain of possible unitary errors on a single qubit.
 
-# 8. The future of quantum error correction
+# 8. Running on real data!
+
+All of this is just a theory. It’s useless if we don’t try it in practice!
+
+We ran our error correction code on one of IBM's real quantum computing systems hosted in Melbourne (this was the only available service that offered the 9 qubits sufficient for our program).
+
+The code we used is attached below (note that we did not introduce an artificial error in the circuit because we are relying on inherent inaccuracies in the quantum hardware to test our code.) To see how effective the code was, we also ran control trials where we implemented the error correction code on the quantum simulator and compared the histograms.
+
+Our results are below. This code was run for the input qubit $$\ket{\psi}=0.689\ket{0}+0.724\ket{1}$$, with the histogram showing the probability distribution of the output qubit across 1024 trials.
+
+The queue times for the Melbourne computer are unfortunately rather long, so we could only enter one trial within the time frame. So far the results seem inconclusive because the histograms match up and are both very similar to simply running the qubit through a series of identity gates (to simulate a noisy channel). We suspect this is because the natural error rate for the qubits in the quantum computer is already low enough that there will be no discernable corruption within such a small circuit.
+
+# 9. The future of quantum error correction
 
 Although Shor’s 9-bit algorithm was a breakthrough in the sense that it provided the first example of working error correction code for quantum computing, it has quite a few limitations. As a result, it’s not in the running as actual error correction, but was crucial as a proof of concept and helped to propel the field forwards.
 
