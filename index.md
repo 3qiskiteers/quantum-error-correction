@@ -12,7 +12,8 @@ the working principle behind a well-known basic error correction scheme known as
 and the future of quantum error correction.
 
 # 1. What is quantum computing? Why does it matter?
-In 1994, Peter Shor created quite a stir when he introduced a quantum algorithm which could factorize large integers into their prime factors in polynomial time. For the first time, the exponential speedup and practical applications of quantum computing were realized -- at least in theory. Though Shor’s algorithm was universally acclaimed, many scientists doubted that it would ever become more than a theoretical interest.
+Quantum computing, to put it simply, is a potential candidate for complete computational revolution. It revolves around the concept of qubits -- unlike a classical bit that is always either discretely 0 or 1, a qubit is able to remain in a quantum superposition of 0 and 1. Quantum algorithms exploit this superposition to perform simultaneous calculations on exponentially more logical states than possible with a classical computer.
+The concept was first imagined (in the form of a quantum Turing-complete machine) in the early 1980s by a physicist named Paul Benioff. Subsequently, other physicists and computer scientists became attracted to the notion of quantum computing, believing that it will possess abilities beyond that of a classical computer. In 1994, Peter Shor created one of the first concrete examples of a relevant use case for quantum computing when he introduced a quantum algorithm which could factorize large integers into their prime factors in polynomial time. For the first time, the exponential speedup and practical applications of quantum computing were realized -- at least in theory. Though Shor’s algorithm was universally acclaimed, many scientists doubted that it would ever become more than a theoretical interest.
 
 # 2. Why do we need quantum error correction?
 By the 90s, physicists were well aware of the sensitive nature of quantum systems, as even the smallest of unintended interactions could destroy the state of a qubit. They knew that quantum circuits had to be cooled to near absolute zero and be extremely well-shielded from the environment. With systems as sensitive as single atoms, it seemed inevitable that algorithms such as Shor’s would fall apart due to a phenomenon known as quantum decoherence.
@@ -62,12 +63,33 @@ As it is a close cousin of the bit-flip code, the circuit for correcting random 
 For example, let’s say $$\ket{\psi}$$ is $$\ket{0}$$ . It will become $$\frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$$ after passing through the Hadamard gate. Then, due to some environmental disturbance, it flips to the $$\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$$ state. After passing through the second Hadamard, it is now in the $$\ket{1}$$  state. The rest of the circuit decodes in exactly the same way as the bit-flip code did.
 
 # 7. The Complete Shor 9 Bit Code
-Include a formulation of “unitary error” (as a sum of I, X, and Z gates)
-Justify the completeness of Shor’s code by plotting the gates’ effects on the Bloch sphere.
-Circuit and code examples
-Real-world example by showing the code running on a real quantum computer
-Maybe a graph on whether this actually increases or decreases error
-Demonstrate the recursive nature of the circuit
+The above two three-bit codes are certainly useful for specific types of error, but they won’t be enough by themselves. A qubit “error” (whether it be an environmental disturbance or a malfunctioning logic gate or any other factor) can be generally expressed as a unitary operator of form $$E=aI+bX+cY+dZ$$, where $$I/X/Y/Z$$ are the Pauli operators and $$a/b/c/d$$ are coefficients such that $$a^2+b^2+c^2+d^2=1$$. Clearly the domain of possible unitary errors encompasses much more than a simple bit flip or phase flip.
+However, what happens if we combine the two gates somehow? Notice that the expression for the error can be simplified: $$E=aI+bX+c(XZ)+dZ$$. This is because a $$180^\circ $$Y$$ axis rotation is equivalent to a $$180^\circ$$ $$X$$ rotation followed by a $$180^\circ$$ $$Z$$ rotation. Now the relationship becomes more clear; although $$E$$ cannot be represented as pure $$X$$ rotations or pure $$Z$$ rotations, it can be entirely represented by a combination function of the two.
+A graphical explanation on the Bloch Sphere may make things clearer. Say you have a qubit $$a\ket{0}+b\ket{1}$$ that you want to transmit (the one displayed in the image is )
+The bit-flip code is capable of correcting any error that places the qubit along the same circle about the $$X$$-axis:
+
+The phase-flip code, in contrast, can handle anything along the same circle about the $$Z$$-axis:
+
+By visual inspection, it is easy to see that rotating about these two axes by some amount will allow the qubit vector to travel anywhere on the Bloch sphere; and, conversely, to allow any error vector on the Bloch sphere to return to the same original point.
+
+Shor’s 9-bit code does exactly this. A full circuit diagram is pictured below:
+
+The circuit diagram looks intimidating. What are all those CNOT gates doing there? It’s hard to wrap our heads around this circuit directly, but things become a little clearer when we consider the seemingly recursive nature of the circuit. Take the middle sections of the circuit:
+
+These three sections are identical to the circuit configuration for the 3-qubit bit flip code we discussed earlier! Each group of three qubits undergoes the same operation that corrects any bit-flip (or X rotation) that may have resulted from the noisy channel.
+
+Next, look at the outer sections:
+
+Yet again, we see a familiar face: the 3-qubit phase flip code also appears across every third qubit in the circuit! Each group of three qubits, represented by a single header qubit, collectively runs through this circuit to correct any phase-flip (or $$Z$$ rotation) that may have resulted from the noisy channel.
+
+In this way, the Shor code is akin to a quantum Lego set. When we send 9 entangled qubits, there could be both a bit flip and a phase flip hiding among them. The outer phase flip code only corrects for one type of error. However, if we split the 9 qubits into 3 logical “groups of qubits” and correct for the bit flip within, we can be sure that the “logical qubit” reaching the phase flip code is $$X$$-rotation-free. After the phase-flip is corrected, we are left with the final qubit that has been corrected of all types of error.
+
+Feel free to explore the behind-the-scenes code that makes this run!
+
+And here is an example of some modular pseudocode that makes the recursive nature of the Shor code clear:
+
+When run in a quantum simulation, our results showed that the resulting output qubit always had the same coefficients as the input qubit. This relationship was upheld through trials across the entire domain of possible unitary errors on a single qubit.
+
 # 8. The future of quantum error correction
 
 Although Shor’s 9-bit algorithm was a breakthrough in the sense that it provided the first example of working error correction code for quantum computing, it has quite a few limitations. As a result, it’s not in the running as actual error correction, but was crucial as a proof of concept and helped to propel the field forwards.
@@ -78,12 +100,10 @@ Another limitation is that we assume the error occurs only in one region, and th
 
 Another limitation is that what we’re preserving is a single qubit. This doesn’t make for a very good logical qubit -- something we can perform quantum algorithms with without worrying much about errors. Even if Shor’s code protects our qubit from an error, immediately after the code, an error could occur on the qubit. Now, if we tried running Shor’s code, the error wouldn’t be fixed, because the new state caused by the error is what would be distributed among the 9 qubits. Modern error correction codes involve logical qubits composed of many physical qubits. That way, when single qubit errors happen, they don’t destroy the whole logical qubit, and can be detected and corrected for.
 
-Before briefly discussing some of the other correction codes out there, we’ll look at something called the quantum threshold theorem.
+Before briefly discussing some of the other error correction codes out there, we’ll look at what’s called the quantum threshold theorem. The theorem is stated roughly as follows: “Quantum computers with a physical error rate below a certain threshold can, through application of quantum error correction schemes, suppress the logical error rate to arbitrarily low levels.” 
 
-Quantum threshold theorem
-Major error correction alternatives
-Especially surface code
-Takeaway
+Like with logic gates in classical computers, quantum gates aren’t infallible. They can introduce errors into our computation, with the “physical error rate” referring to the probability of that happening. However, with the right error correcting code, we’re still able to peform long calculations with good precision. The idea is we can fix the errors faster than they pop up.
+
 
 References
 Quantum Error Correction for Beginners
