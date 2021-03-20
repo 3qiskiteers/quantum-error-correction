@@ -378,6 +378,8 @@ The broader family of error correcting codes which use these ancillary qubits is
 
 A promising candidate currently is surface codes. With these, physical qubits are placed on the edges of a grid pattern to form the larger logical qubit, with stabilizer codes for X or Z gates placed at the grid corners and square centers. When errors occur, the parity in certain groups of four qubits will change, so that measuring the stabilizers shows us where the errors are. Additionally, surface codes include toric codes and planar codes. With toric codes, there’s no problems at the boundaries because it loops back on itself. With planar codes though, it stops at the boundaries, so different stabilizers are used there. Surface codes have a threshold on the order of 1%.
 
+Although Shor's code may not be in the running for quantum error correction code, no one can deny the significant impact it had. By showing that (at least in theory) decoherence could be protected against, the idea of quantum computers took a big step away from our imaginations and towards reality. With these error correcting algorithms continuing to get better, we might be able to have all the benefits of quantum computing without having to worry about the fragility of qubits, which would be incredible.
+
 ## References
 1. [25 Years of quantum error correction](https://www.nature.com/articles/s42254-020-0244-y.pdf?origin=ppub)
 2. [Motives behind quantum error correction](http://decodoku.blogspot.com/2016/02/4-decoding-without-looking.html?m=1)
