@@ -42,8 +42,9 @@ Classical error codes also rely on making measurements of the data over time; af
 So, if we can't copy or measure the data, how are we supposed to protect it?
 This is where quantum mechanics finally redeems itself; we can use the concept of quantum entanglement to ensure that although any one qubit may be corrupted, the joint product state of a group of qubits will remain similar enough that we can perform error correcting operations to fix the corrupted qubit, *without ever directly copying or measuring a single qubit*.
 Hooray! We have our modus operandi. 
-![](img/entanglement.png)
-
+<p align="center">
+  <img src="img/entanglement.png">
+</p>
 Now, we can properly dive into the ideas that Peter Shor used to develop the first complete error correcting code.
 
 # 4. Types of Quantum Errors
