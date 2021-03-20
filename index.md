@@ -15,17 +15,25 @@ and the future of quantum error correction.
 Quantum computing, to put it simply, is a potential candidate for complete computational revolution. It revolves around the concept of qubits -- unlike a classical bit that is always either discretely 0 or 1, a qubit is able to remain in a quantum superposition of 0 and 1. Quantum algorithms exploit this superposition to perform simultaneous calculations on exponentially more logical states than possible with a classical computer.
 The concept was first imagined (in the form of a quantum Turing-complete machine) in the early 1980s by a physicist named Paul Benioff. Subsequently, other physicists and computer scientists became attracted to the notion of quantum computing, believing that it will possess abilities beyond that of a classical computer. In 1994, Peter Shor created one of the first concrete examples of a relevant use case for quantum computing when he introduced a quantum algorithm which could factorize large integers into their prime factors in polynomial time. For the first time, the exponential speedup and practical applications of quantum computing were realized -- at least in theory. Though Shor’s algorithm was universally acclaimed, many scientists doubted that it would ever become more than a theoretical interest.
 
+![](img/old-men.png)
+
 # 2. Why do we need quantum error correction?
 By the 90s, physicists were well aware of the sensitive nature of quantum systems, as even the smallest of unintended interactions could destroy the state of a qubit. They knew that quantum circuits had to be cooled to near absolute zero and be extremely well-shielded from the environment. With systems as sensitive as single atoms, it seemed inevitable that algorithms such as Shor’s would fall apart due to a phenomenon known as quantum decoherence.
 
 Quantum decoherence is the result of an unintended interaction between a qubit and the environment, which ends up irreversibly disturbing the qubit’s wavefunction. By environment, we just mean everything outside our quantum subsystem. The environment is out of our control; we cannot measure it or apply quantum gates to investigate it. Because of this, interactions with the environment appear to destroy the quantum information in our circuit, as we are unable to interact with it to retrieve the lost information. The information is “lost” in the first place because, when two quantum objects interact, they become correlated, or entangled, “spreading” the information between them. If we could examine the universe’s wavefunction as a whole, we would see that information is conserved. However, our limited perspective only allows us to see half of the story, and hence we observe decoherence, the unpredictable, apparently non-unitary, loss of the original quantum states to the outside world. It is as if an unknown Hamiltonian has been “turned on,” or as if an unwanted, unknown measurement has been made on the system.
 
+![](img/decoherence.png)
+
 With no practical way to perfectly shield our quantum circuits, we had to invent another way to circumvent the sensitivity of quantum systems and create large-scale quantum computers. Only then could we finally realize the prospects of things such as Shor’s factoring algorithm. The answer was quantum error correction.
+
+![](img/quantum-computer.png)
 
 # 3. Classical vs Quantum EC
 The breakthroughs in classical computing theory of the past decades have changed the world perhaps more than any other technology. We have already learned a lot about error correction in integrated circuits and transmission of data over the internet. Can’t we use that knowledge and experience and apply it to quantum circuits?
 
-Much of classical error correction involves creating redundancies through making multiple copies of the desired information. However, measurement inherently disturbs quantum states, meaning we physically cannot create copies of an arbitrary quantum state without causing decoherence. The other difference is that classical error codes are mostly used in the transmission of data over distances. However, quantum systems are so sensitive that errors often arise even during processing, i.e. applying quantum gates. This means quantum error correcting codes will be needed much more frequently, basically all the time.
+Much of classical error correction involves creating redundancies through making multiple copies of the desired information. Classical error codes also rely on making many measurements of the data over time. However, measurement inherently disturbs quantum states, meaning we should avoid measurements of qubit systems at all costs. This also means we cannot create copies of arbitrary quantum states due to the No-Cloning Theorem. The other difference is that classical error codes are mostly used in the transmission of data over distances. However, quantum systems are so sensitive that errors often arise even during processing, i.e. applying quantum gates. This means quantum error correcting codes will be needed much more frequently, basically all the time.
+
+![](img/entanglement.png)
 
 # 4. Types of Quantum Errors
 Bit-flip codes account for situations where $$\ket{0}$$ gets flipped to $$\ket{1}$$ or $$\ket{1}$$ gets flipped to $$\ket{0}$$. These errors are represented by the X operator.
@@ -35,6 +43,9 @@ Sign-flip codes, or phase-flip codes, account for situations when $$\ket{0} + \k
 Both of these types of phenomenon are encountered often in nature. In order to have what is known as a complete error correcting code, it must be able to deal with both bit-flips and phase-flips.
 
 # 5. The Bit-Flip Code
+
+![](img/bit-flip-diagram.png)
+
 The first step of the process is encoding. Here we’re going to take advantage of quantum mechanics and create an entangled state. $$\ket{\psi}$$  is the state we want to keep in tact at the end of the day. Then, we have two CNOT gates applied one after another. This entangles all three qubits.
 
 Next is the random environmental error. Since we are doing the bit flip code, we can correct for any rotation around the x axis.
@@ -47,9 +58,15 @@ Error codes are generally broken into a 3 step process: encoding, simulated erro
 
 The rest of the circuit involves applying another two CNOT gates in a similar fashion, followed by a CCNOT or Toffoli gate on psi. The Toffoli gate will only flip $$\ket{\psi}$$ if both ancilla bits are in the $$\ket{1}$$  state. So, assuming only 1 qubit has been flipped in the noisy channel, let’s see how this circuit works!
 
+![](img/1-error.png)
+
 If the first bit is flipped, then the ancilla bits always become the $$\ket{1}$$  state, and thus the Toffoli takes care of the correction. If either of the ancilla bits are flipped, the Toffoli will not activate, so the state of $$\ket{\psi}$$ is not disturbed.
 
+![](img/2-error.png)
+
 What happens if two bits are flipped? In this case, two bit-flips are indistinguishable from a single bit-flip on the other qubit. For example, if $$\ket{\psi}$$ and one of the ancilla bits are flipped, the Toffoli will never activate, as the two ancilla bits will always be different. This means that $$\ket{\psi}$$ will not be reverted to its original value. If instead it is both ancilla bits which are flipped, the Toffoli will activate on a false-positive, as they will both end up in the $$\ket{1}$$  state. This time, $$\ket{\psi}$$ is accidentally flipped into the incorrect state, even though it was correct in the first place.
+
+![](img/3-error.png)
 
 What if all three bits are flipped? This situation turns out to be equivalent to no flips occurring at all. In this case, both ancilla bits will always end up in the $$\ket{0}$$  state, which will fail to activate the Toffoli and leave $$\ket{\psi}$$ in the incorrect state.
 
@@ -57,67 +74,159 @@ In conclusion, the 3-bit code can only account for a single bit flip. In general
 
 Concretely, how much does using the 3-bit code help us? We know it will only work if 0 or 1 of our 3 qubits are flipped. The probability of none being flipped is $$(1-p)^3$$, while the probability of any single qubit being flipped is $$p(1-p)^2$$. So, the combined probability of our error code reproducing the correct state is $$(1-p)^3 + 3p(1-p)^2$$. If we didn’t use error correction, the probability of $$\ket{\psi}$$ being correctly transmitted is just 1-p, as mentioned before. The probability of perfectly reproducing the original state is a measure of what’s called fidelity. Plotting the fidelity vs $$p$$, we see that the 3-bit code will result in higher fidelity as long as the probability of a bit flip is less than 50%. Once the probability becomes higher than 50%, however, the problems associated with 2 or 3 bit-flips dominate.
 
-Implementation
+![](img/fidelity.png)
+
+## Implementation
 This all makes sense in theory, but it is equally important to verify the bit-flip code experimentally. There are several popular quantum computing frameworks, but the one we’ll be using is Qiskit for Python. If you don’t have it installed already, use the command `pip install qiskit`.
 
 Start by importing the necessary modules. We’ll be needing several `qiskit` functions such as the `Initialize` custom gate as well as a few functions for visualizing our experimental results.
 
 ```python
-	insert code
+from qiskit import *
+from qiskit.visualization import plot_histogram, plot_state_city, plot_bloch_multivector
+from qiskit.extensions import Initialize
+import numpy as np
 ```
 
 Next, initialize the quantum circuit in the above diagram. We will need three qubits corresponding to $$q_0$$, $$q_1$$, and $$q_2$$, as well as one classical bit to store our measurement results.
 
 ```python
-	insert code
+bf_circuit = QuantumCircuit(3,1)
 ```
 
 We want to be able to correct errors for any arbitrary state $$\ket{\psi}$$. Define `s_init` to pick a random pair of amplitudes, using them to create a custom “initialization gate” which will be applied to $$q_0$$ at the beginning of the program.
 
 ```python
-	insert code
+def s_init():
+    n = np.random.uniform(0,np.pi)
+    psi = [np.sin(n),np.cos(n)]
+    init_psi = Initialize(psi)
+    init_psi.label = "init"
+    return init_psi
 ```
 
 Next is the encoding stage. Simply apply two CNOT gates to the desired quantum circuit `qc`. The first parameters are the indexes of the control bit followed by the target bit, respectively. Since we want to entangle the ancillary bits, both of the controls should be set to the index of $$q_0$$, `0`.
 
 ```python
-	insert code
+def encoding (qc):
+    qc.cx(0,1)
+    qc.cx(0,2)
 ```
 
 Next, we need to introduce a random error, represented as a rotation about the $$x$$-axis by some arbitrary angle.
 
 ```python
-	insert code
+def bit_flip(qc):
+    q = np.random.randint(0,3)
+    qc.rx(np.random.uniform(0,np.pi/2), q)
 ```
 
 Now, decode the qubit by applying two more CNOT gates on the ancillary bits, followed by a Toffoli (CCNOT) whose target bit is $$q_0$$.
 
 ```python
-	insert code
+def decoding(qc):
+    qc.cx(0,1)
+    qc.cx(0,2)
+    qc.ccx(1,2,0)
 ```
 
 Last but not least, measure the state of the original qubit and store the result in index `0` of the classical register.
 
 ```python
-	insert code
+def s_measure(qc):
+    qc.measure(0,0)
 ```
 
 Putting it all together and visualizing the circuit, we get:
 
 ```python
-	insert code
+bf_circuit.append(s_init(),[0])
+encoding(bf_circuit)
+bf_circuit.barrier(range(3))
+bit_flip(bf_circuit)
+bf_circuit.barrier(range(3))
+decoding(bf_circuit)
+bf_circuit.barrier(range(3))
+
+s_measure(bf_circuit)
+
+# Visualize circuit.
+bf_circuit.draw('mpl')
 ```
 
-Now to test our circuit, all we have to do is choose a platform to run it on and plot the results.
+![](img/bit-flip-circuit.png)
+
+Now to test our circuit, all we have to do is choose a platform to run it on and plot the results. In this case, we will choose the quantum simulator.
 
 ```python
-	insert code
+backend = BasicAer.get_backend('qasm_simulator')
+counts = execute(bf_circuit, backend, shots=1024).result().get_counts() # No. of measurement shots = 1024
+plot_histogram(counts)
 ```
+
+![](img/bit-flip-histo.png)
 
 # 6. The Phase-Flip Code
 As it is a close cousin of the bit-flip code, the circuit for correcting random phase-flips is very similar. The only difference is that there are three extra Hadamard gates at the end of the encoding sequence, and three more at the beginning of the decoding sequence.
 
 For example, let’s say $$\ket{\psi}$$ is $$\ket{0}$$ . It will become $$\frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$$ after passing through the Hadamard gate. Then, due to some environmental disturbance, it flips to the $$\frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$$ state. After passing through the second Hadamard, it is now in the $$\ket{1}$$  state. The rest of the circuit decodes in exactly the same way as the bit-flip code did.
+
+## Implementation
+Testing the phase-flip code with Qiskit is a very similar process. All we need to do is add the three Hadamard gates at the end of the encoding state and the beginning of the decoding stage!
+
+```python
+def encoding (qc):
+    qc.cx(0,1)
+    qc.cx(0,2)
+    qc.h(0)
+    qc.h(1)
+    qc.h(2)
+
+def decoding(qc):
+    qc.h(0)
+    qc.h(1)
+    qc.h(2)
+    qc.cx(0,1)
+    qc.cx(0,2)
+    qc.ccx(1,2,0)
+```
+
+Also, we need to change our original error function so that it instead introduces a random rotation around the $$z$$-axis.
+
+```python
+def phase_flip(qc):
+    q = np.random.randint(0,3)
+    qc.rz(np.random.uniform(0,np.pi/2), q)
+```
+
+Putting it all together, we get the following circuit:
+
+```python
+pf_circuit.append(s_init(),[0])
+encoding(pf_circuit)
+pf_circuit.barrier(range(3))
+phase_flip(pf_circuit)
+pf_circuit.barrier(range(3))
+decoding(pf_circuit)
+bf_circuit.barrier(range(3))
+
+s_measure(pf_circuit)
+
+# Visualize circuit.
+pf_circuit.draw('mpl')
+```
+
+![](img/phase-flip-circuit.png)
+
+Testing it on the simulator again, you can see that the state of $$q_0$$ is preserved. The probabilities of measuring a $$\ket{0}$$ or $$\ket{1}$$ are equal to the original amplitudes squared.
+
+```python
+backend = BasicAer.get_backend('qasm_simulator')
+counts = execute(pf_circuit, backend, shots=1024).result().get_counts() # No. of measurement shots = 1024
+plot_histogram(counts)
+```
+
+![](img/phase-flip-histo.png)
 
 # 7. The Complete Shor 9 Bit Code
 The above two three-bit codes are certainly useful for specific types of error, but they won’t be enough by themselves. A qubit “error” (whether it be an environmental disturbance or a malfunctioning logic gate or any other factor) can be generally expressed as a unitary operator of form $$E=aI+bX+cY+dZ$$, where $$I/X/Y/Z$$ are the Pauli operators and $$a/b/c/d$$ are coefficients such that $$a^2+b^2+c^2+d^2=1$$. Clearly the domain of possible unitary errors encompasses much more than a simple bit flip or phase flip.
